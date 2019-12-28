@@ -1,5 +1,5 @@
 
-console.log("create socket server");
+console.log("server socket created");
 
 // server
 require('net').createServer(function (socket) {

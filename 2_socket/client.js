@@ -1,7 +1,7 @@
  
 
 
-console.log("create socket client");
+console.log("client socket created ");
 
 // client
 var s = require('net').Socket();
