@@ -1,0 +1,83 @@
+<html>
+<body>
+<h1>All Users Page</h1>
+<p>My paragraph.</p>
+
+<table>
+<thead>
+    <tr>
+        <th>USERID</th>
+        <th>FIRST_NAME</th>
+        <th>LAST_NAME</th>
+    </tr>
+
+</thead>
+<tbody>
+
+</tbody>
+</table>
+
+<dialog >
+    <p>FIRST_NAME</p>
+</dialog>
+
+
+<script>
+
+function getAllUsers() {
+  var x = new XMLHttpRequest();
+  x.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        //document.getElementById("demo").innerHTML = this.responseText;
+        //[{"id":1,"name":"shuky","age":20}
+        let arr = JSON.parse(this.responseText)
+        let t = document.querySelector('table tbody')
+        arr.forEach(u => {
+            t.innerHTML += '<tr>' + 
+                '<td>' + u.USERID + '</td>' + 
+                '<td>' + u.FIRST_NAME + '</td>' + 
+                '<td>' + u.LAST_NAME + '</td>' + 
+            '</tr>';
+        });
+        setDialogAndClicks();
+    }
+  };
+  x.open("GET", "http://localhost:8080/get/users");
+  x.send();
+}
+
+getAllUsers();
+
+
+setDialogAndClicks = () => {
+    let rows = document.querySelectorAll('table tbody tr')
+    rows.forEach(r => {
+        r.onclick = ev => {
+            getPersonalDataForDialog(r)
+        }
+    })
+}
+
+getPersonalDataForDialog = r => {
+    let id = r.querySelector('td').textContent
+    var x = new XMLHttpRequest();
+    x.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let data = JSON.parse(this.responseText)[0]
+            let p = document.querySelector('dialog p')
+            p.innerHTML = data.FIRST_NAME;
+            let d = document.querySelector('dialog')
+            d.showModal()
+            setTimeout(()=>{
+                d.close()
+            }, 3000)
+        }
+    };
+    x.open("GET", "http://localhost:8080/get/users/" + id);
+    x.send();
+}
+
+</script>
+
+</body>
+</html>
